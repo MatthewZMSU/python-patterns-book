@@ -17,9 +17,21 @@ class SqlRepository(AbstractRepository):
         self.session = session
 
     def add(self, batch):
-        # self.session.execute('INSERT INTO ??
-        ...
+        self.session.execute(
+            "INSERT INTO batches (reference, sku, _purchased_quantity, eta) VALUES (:r, :s, :p, :e)",
+            {
+                "r": batch.reference,
+                "s": batch.sku,
+                "p": batch._purchased_quantity,
+                "e": batch.eta,
+            },
+        )
 
     def get(self, reference) -> model.Batch:
-        # self.session.execute('SELECT ??
-        ...
+        res = self.session.execute("SELECT sku, _purchased_quantity, eta FROM batches WHERE reference = :r", {"r": reference})[0]
+        return model.Batch(
+            ref=reference,
+            sku=res[0],
+            qty=res[1],
+            eta=res[2],
+        )
