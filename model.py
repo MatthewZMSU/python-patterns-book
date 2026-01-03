@@ -57,6 +57,8 @@ class Batch:
     def deallocate(self, line: OrderLine):
         if line in self._allocations:
             self._allocations.remove(line)
+            return True
+        return False
 
     @property
     def allocated_quantity(self) -> int:
